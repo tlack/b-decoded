@@ -83,10 +83,16 @@ and shifting his focus to another tab, window, etc. To get there he makes a lot 
 of the code formatting and naming conventions. He also, in `b`, creates a dense set of interlocking
 macros and abstractions that can make the code very hard to follow.
 
-Critics say that his code is like old school modem line noise: random punctuation intermixed with bits
-of understandable code. I would suggest that he's actually quite careful with the 
+Critics say that his code is like old school modem line noise: random
+punctuation intermixed with bits of understandable code. I would suggest that
+he's actually quite careful with the abstractions he chooses and they are
+actually not always the most dense, highly compressed code structures available
+to him. He chooses wisely.
 
-Arthur says his code is like woodgrain, a more romantic view. 
+Arthur, by the way, says his code is like woodgrain, a more romantic view. 
+
+About this repo
+------
 
 Here I have reworked parts of the code so they are easier to understand by a
 programmer of the traditional school of code formatting.
