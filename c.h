@@ -1,4 +1,10 @@
-typedef unsigned char C,*S,*K;typedef int I;typedef long J;typedef double F;typedef void V;V*memcpy();J strlen(const char*);
+typedef unsigned char C,*S,*K;
+typedef int I;
+typedef long J;
+typedef double F;
+typedef void V;
+V*memcpy();
+J strlen(const char*);
 
 #define R return
 #define P(b,a...)   if(b)return(a);

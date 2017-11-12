@@ -13,47 +13,52 @@ ZS r2(S s){ // read a string of up to 256 bytes from the keyboard (fd 0 aka stdi
 	ZC b[256];
 	R w2(s),b[read(0,b,256)-1]=0,b;}
 
-ZI rand(){ // how could this possibly work
+ZI rand(){ // how could this possibly work? no increment or varying state. 
 	ZJ j0=-314159;
-	R j0=4294957665L*j0+(j0>>32); }
+	R j0=4294957665L * j0 + (j0>>32); }
 
 ZS ma(I d,J n){ // mmap; d is file descriptor or zero for anonymous; n is size (long / J)
 	ZJ p=0x700000;
-	p+=d?0:n;
-	R mmap(d?0:p-n,n,0x7,d?2:0x22,d?d:-1,0); }
+	p+=d?0:n; // attempt to get a specific address from the call
+	R mmap(d?0:p-n,n,0x7,d?2:0x22,d?d:-1,0); // TODO no idea what mmap flag 0x7 means }
 
-ZS mf(S s,J*n){ //mmap a file (in s); return size in n
-	J b[18];
+ZS mf(S s,J*n){ // mmap a file by name (s); return size in n
+	J b[18]; // fstat results buffer
 	I d=open(s,0);
 	Qs(0>d,s) // crash if open returns < 0
-	// below i think we're checking size and making it bigger w/ mmap? weird
-	R fstat(d,b),s=(*n=b[6]) ? ma(d,*n):s,close(d),s;}
+	// next bit: fstat and mmap. recall that struct stat[6] == st_size; 
+	// if file is empty/doesnt exist, close/return file size; otherwise, perform malloc 
+	R fstat(d,b),s=(*n=b[6]) 
+		? ma(d,*n) : s,close(d),s;}
 
 // printf scanf 
 ZC b[24]; // scratch buffer for outputting formatted numbers
 
-ZS ng(S s){ // sets the char preceding s to minus, then returns s
+// negative sign string: sets the char preceding s pointer to minus, then returns decremented s
+ZS ng(S s){ 
 	R *--s='-',s; }
 
-ZS pu(S s,J i){
+// print unsigned integer i backward into s, returning 
+ZS pu(S s,J i){ 
 	J j;
-	do*--s='0'+i-10*(j=i/10);
-	W(i=j);
+	do*--s='0'+i-10*(j=i/10); W(i=j);
 	R s;}
 
-ZF x(I n){ // returns 1 to the n'th power
+ZF x(I n){ // exponent. returns 1 to the n'th power
 	F e=1;
 	N(n,e*=10)
 	R e; }
 
-S pi(J i){
+S pi(J i){ // print signed integer
+	// calls ng() and itself for negative values; writes from end of scratch b buffer
 	R 0>i?ng(pi(-i)):pu(b+23,i);
 } //P(NI==f||0>(j|k),nf)
 
 S pf(F f){ // float (F) to C string (S)
+	// call itself for negative values; short circuit !f = "0.0"
 	P(0>f,ng(pf(-f)))
 	P(!f,"0.0")
-	I n=6;
+	I n=6; // figure out the correct output exponent
 	W(f<1e6)--n,f*=10;
 	W(f>=1e7)++n,f/=10;
 	S p=n?p=pi(n),*--p='e',p:b+23;
@@ -107,11 +112,14 @@ ZK M[31]; // M is 31 pointers to memory regions
 ZK m1(J n){
 	K x,r;
 	I i=60-__builtin_clzl(n+7),j; // what does the count of leading zeroes have to do with this
-	P(x=M[i],M[i]=xx,x)
+	P(x=M[i], M[i]=xx, x)
 	j=i;
-	W(!(x=++j<31?M[j]:8+ma(0,16L<<(j=MX(18,i)))));
+	W( 
+		!(x=++j<31 
+		  ? M[j] : 8 + ma(0,16L << (j=MX(18,i))))
+	);
 	xm=i,M[j]=xx,r=x;
-	W(i<j) x+=16L<<xm,M[*(J*)(x-8)=i++]=x,xx=0;
+	W(i<j) x += 16L<<xm, M[*(J*)(x-8)=i++]=x, xx=0;
 	R r;}
 
 J nt[]={8,1,2,4,8,4,8,4}; // nt is the size in bytes of each of the types
@@ -120,10 +128,10 @@ ZJ W=-32;                 // avail size of workspace
 ZV l0();
 
 V1(r0){ // decref
-	if(Ax||!x)R; // what is Ax? if X isnt valid, just return - no need to decref
-	if(8==xt){l0(x);R;} // what is type 8?
-	if(xr){--xr;R;} // if x has a ref count > 0, decrease it, and return.
-	if(!xt||KS<xt) // if x is a linked list (xt==0), or a type less than 7L (KS)..
+	if (Ax||!x) R; // what is Ax? if X isnt valid, just return - no need to decref
+	if (8==xt) {l0(x);R;} // what is type 8?
+	if (xr) {--xr;R;} // if x has a ref count > 0, decrease it, and return.
+	if (!xt||KS<xt) // if x is a linked list (xt==0), or a type less than 7L (KS)..
 		N1(xn,r0(Xx)) // call r0 on all of them.. Xx means (K*)x[i], and i is set in N1 (while loop)
 	W-=16L<<xm, // add back 16L << xm (amount of memory x uses) to the workspace W
 	xx=M[xm], // ??
@@ -131,9 +139,9 @@ V1(r0){ // decref
 	
 K1(r1){
 	P(Ax,x)
-	R++xr?x:AB("r1");}
+	R ++xr ? x : AB("r1");}
 
-K tn(I t,I n){ // create a value of type t size n
+K tn(I t,I n){ // allocate a vector value of type t size n
 	K x=m1(MX(1,n) * nt[KS<t?0:t]);
 	R W += 16L<<xm, xu=0, xt=t, xn=n, x;}
 
@@ -143,11 +151,11 @@ ZK xiy(K x,I i,K y){ // this seems to copy items from y into x, but incref y as 
 	R Y0(x);}
 
 K2(j2){ // join two values i think
-	I m=xn,n=m+(Ay?1:yn);
-	P(!m&&!xt,X0(y))
-	$(xr || 8+NX*n > 16L<<xm, x=xiy(tn(xt,n),0,x))
+	I m=xn, n=m+(Ay ? 1:yn);
+	P(!m&&!xt, X0(y))
+	$(xr || 8+NX*n > 16L<<xm, x=xiy(tn(xt,n), 0, x))
 	xu=0,xn=n;
-	Ay ? memcpy(x+NX*m,&y,NX) : xiy(x,m,y);
+	Ay ? memcpy(x+NX*m, &y, NX) : xiy(x,m,y);
 	R x;}
 
 // struct/fixedarray experiment
@@ -156,6 +164,7 @@ ZV1(l0){
 	if((J)xy)l0(xy),l0(xz);
 	xx=M[xm],
 	M[xm]=x;}
+
 K3(l1){ // return a list containing x, y, and z.
 	K r=m1(24);
 	R rt=8,rn=3,rx=x,ry=y,rz=z,r;}
@@ -169,40 +178,65 @@ K k0(){R r1(K0);}
 
 ZK vf(I f){
 	K r=kS(0);
-	N(26,K x=G[i]; if(NL-x)if(f^(Ax||xt))r=j2(r,ks(i))) // what?
+	N(26,K x=G[i]; if(NL-x) if (f^(Ax||xt)) r=j2(r, ks(i))) // what?
 	R r;}
 
 ZK Li(K x,I i){ // Li (list item) gets item i from x
 	R !xt || KS<xt ? Xx : // return list item (K*x)[i] OR waterfall type check to return right type
 		( KC==xt ? kc(Xc) : KI==xt ? ki(Xi) : ks(Xi));} 
 
-ZK e1(K(*f)(),K x){ // e1 (each one) - call f(x) and return each item in x; use f=0 for general list
+// e1 (each one) - call f(x) and return each item in x; use f=0 for general list
+ZK e1(K(*f)(),K x){ 
 	K r=kK(xn);       // create general list r
-	N1(rn,            // for each item in r..
-		Rx=f?f(Li(x,i)):Li(x,i)) // if f is a function, set R[i] = f(x), else just pull out the item
+	N1(rn,            // for each item in r.. (N1 sets i)
+		// recall that Rx is (K*)r[i]
+		Rx=f ? f(Li(x,i)) : Li(x,i)) // if f is a function, set R[i] = f(x), else just pull out the item
 	R r;}
 
 K sS(I c,K x){
-	I n=c?xn:0;
-	N(xn,K y=Xx;n+=yn)
+	I n=c ? xn : 0;
+	N(xn, K y=Xx; n+=yn) // Xx is xK[i] is (K*)x[i]
 	K r=kC(n);
-	if(c)--rn;
+	if(c) --rn;
 	S s=r;
-	N(xn, K y=Xx;s=memcpy(s,y,yn)+yn;if(c)*s++=c)
+	N(xn, K y=Xx; s=memcpy(s,y,yn)+yn; if(c)*s++=c)
 	R X0(r);}
 
-ZK1(se){
+ZK1(se){ 
+ // note: there may be a syntax error around here with the nested functions according to some compilers
  K1(c){
-	 N(xn,if(94u<Xc-32){K r=kC(2*xn);N(xn,hh(r+2*i,Xc))R j2(c2('0'+xu,'x'),r);})
-	 R cj('"',jc(r1(x),'"'));}
- P(Ax,KS==Ax ? c2('`','a'+xi) : (KC==Ax ? X0(c(x=c1(xi))) : (kp(KI==Ax?pi(xi):KF==Ax?pf(xf):(S)"+"+!xi)) ) )
- P(8==xt,l2(x))
- P(1==xn,cj(',',se(Li(x,0))))
+	 N(xn, 
+		if(94u<Xc-32){
+			K r=kC(2*xn);
+			N(xn,hh(r+2*i,Xc))
+			R j2(c2('0'+xu,'x'),r);
+		})
+	 R cj('"',jc(r1(x),'"'));
+	}
+
+ P(Ax,KS==Ax 
+	? c2('`','a'+xi) 
+	: (KC==Ax 
+			? X0( c(x=c1(xi)) )
+			: (kp(KI==Ax 
+						? pi(xi)
+						: KF==Ax 
+							? pf(xf)
+							:(S)"+"+!xi)) ) )
+
+ P(8==xt, l2(x))
+
+ P(1==xn, cj(',',se(Li(x,0))))
+
  I t=KS<xt?0:xt;
+ 
  P(KC==t,c(x))
+ 
  P(!xn,c2("!("[!t],")  0   `"[t]))
+ 
  x=sS(";      "[t],e1(se,x));
- R !t?cj('(',jc(x,')')):x;}
+ R !t?cj('(',jc(x,')')):x;
+}
 
 K1(o){
 	K y=QQ-Ax?se(x):j2(kp("ERROR: "),kp((S)(-1UL>>16&(J)x)));
