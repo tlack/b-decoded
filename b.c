@@ -129,55 +129,73 @@ I M=0;K*k=r||':'==s[1]?a=*s,s+=2,G+a-'a':0;P('!'==*s,++s,X(k,enm(ki(ip(s,strlen(
 // here are t and q:
 I1(t){
 	I a=xi-'a';
-	R !Ax ? xu: 126<xi ? KI:26u>a&&T[a]?T[a]:A(x=26u>a?G[a]:zK[2+xi-16])?Ax:xt+8;}
+	R !Ax ? 
+		xu: 126<xi 
+		? KI 
+		: 26u>a&&T[a] 
+			? T[a] 
+			: A(x=26u>a ? G[a] : zK[2+xi-16]) 
+				? Ax : xt+8;}
+
 I1(q){I i=xi-'a';
-	R Ax?26u>i&&L[i]?L[i]:0:':'==*x?I(xy):0;}
+	R Ax 
+		? 26u>i&&L[i] 
+			? L[i] 
+			: 0 : ':'==*x ? I(xy) : 0;}
 
 auto K d();
 
 K e(I r,K x){
 	K y=d(r,x);
-	R Ay?128==yi||32>yi&&!zK[2+yi-16]?ZR(t(x),r):MV(t(x),r,y):y;}
+	R Ay 
+		? 128 == yi || 32>yi && !zK[2+yi-16]
+			? ZR(t(x),r)
+			: MV(t(x),r,y)
+				:y;}
 	
 K b(I f,K x){
 	K y=d(16,x);
-	R Ay?AB("b"):16==yu?y[yn-1]=JJ[y[yn-1]+f*4],y:j3(y,tst(t(x),yu),c1(JJ[f?2:6]));}
+	R Ay
+		? AB("b"):16==yu
+			? y[yn-1]=JJ[y[yn-1]+f*4],y
+			: j3(y,tst(t(x),yu),c1(JJ[f?2:6]));}
 
 K f(I r,K x){
 	K y=e(r,x);
-	R r-yu?MV(t(x),r,y):y;}
+	R r-yu ? MV(t(x),r,y) : y;}
 
 K E(I r,K x){
 	I i=xn-1;
-	K z=e(r,Xx),y=kK(i--);
-	r=zu,Yx=z;
-	W(i--)Yx=e(0,xK[i+1]);
-	R u(r,sS(0,y));}
+	K z=e(r,Xx), y=kK(i--);
+	r=zu, Yx=z;
+	W(i--) Yx=e(0,xK[i+1]);
+	R u(r,sS(0,y)); }
 
 K v(I r,K x,I n){
 	K y=xz,z;
-	I c=!n&&!Ay&&a==*y,l=M;
-	K1(h){R++s,1<n?e(0,x):f(r,x);}
-	z=h(xK[3]),M=l,y=h(y),x=b(1,xy);
-	y=j2(y,n||c?yn-=c*B,jmp(1-n?n-xn-yn-3:zn):c1(RET));
-	R j3(jc(x,yn),y,z);}
+	I c=!n && !Ay && a==*y, l=M;
+	K1(h){ R++s, 1<n ? e(0,x) : f(r,x);}
+	z=h(xK[3]), M=l, y=h(y), x=b(1,xy);
+	y=j2(y, n || c ? yn-=c*B,jmp(1-n?n-xn-yn-3:zn) : c1(RET));
+	R j3(jc(x,yn), y, z);}
 
 K1(w){
- I i='N'==*x?L[N++]:0,j=0;
+ I i='N'==*x ? L[N++] : 0,j=0;
 
  V mm(K x) {
 	 I i;
-	 $(Ax,if(26u>xi-'a'&&L[i=xi-'a'])M|=1<<L[i])
-	 $(':'==*x&&A(xy),i=I(xy)-'a',M&=~(1<<L[i]),mm(xz))
-	 N(xn,mm(sc("{WNC",*x)?xK[xn-1-i]:Xx))}
+	 $(Ax, if(26u>xi-'a' && L[i=xi-'a']) M |= 1<<L[i])
+	 $(':' == *x && A(xy), i=I(xy)-'a', M &= ~(1<<L[i]), mm(xz))
+	 N(xn, mm(sc("{WNC",*x) ? xK[xn-1-i] : Xx))}
 	
  mm(x);
- K y=xy,z=xz;
- P(!i&&!Az&&'$'==*z,x=b(1,y),z=v(0,z,-xn-1),j3(jc(x,zn+2),z,jmp(-xn-1-zn-2))) // if b return a
- x=i?M|=1<<i,jc(cm(0,i,j=(j=q(y))?j:*D),JJ[1]):b(0,y),z=i?j2(e(0,z),o2(0,1,i,i,129)):e(0,z);
+ K y=xy, z=xz;
+ P(!i && !Az && '$'==*z, x=b(1,y), z=v(0,z,-xn-1), j3(jc(x,zn+2), z, jmp(-xn-1-zn-2))) // if b return a
+ x=i ? M|=1<<i, jc(cm(0,i,j=(j=q(y)) ? j :*D),JJ[1]) : b(0,y),z=i ? j2(e(0,z), o2(0,1,i,i,129)) : e(0,z);
  I n=-zn-xn-1;
- z=j3(jmp(zn),z,n<-128?--xn,j2(x,Jj(x,n)):jc(x,n));
- R i?--N,M&=~(1<<i),j3(f(j,y),ZR(0,i),z):z;
+ z=j3(jmp(zn), z, n<-128 ? --xn, j2(x, Jj(x,n)) : jc(x,n));
+ R i ? --N, M&=~(1<<i), j3(f(j,y), ZR(0,i),z)
+     : z;
 }
 
 K g(I c,K x){

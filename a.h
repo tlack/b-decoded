@@ -42,12 +42,12 @@ _ K kf(F f){R*(K*)&f;}
 _ K ks(J x){R(K)(KS<<48|x);}
 _ K qs(S s){R(K)(QQ<<48|(J)s);}
 _ K c0(){R kC(0);}
-_ K c1(C x){K r=kC(1);R*r=x,r;} // create 1 char strning from 
-_ K c2(C x,C y){K r=kC(2);R*r=x,r[1]=y,r;} // 2.. x, y  
-_ K c3(C x,C y,C z){K r=kC(3);R*r=x,r[1]=y,r[2]=z,r;} // 3.. x, y, z
-_ K jc(K x,C c){R j2(x,kc(c));} // append c to x
+_ K c1(C x){K r=kC(1); R*r=x,r;} // create 1 char string from 
+_ K c2(C x,C y){K r=kC(2); R *r=x, r[1]=y, r;} // 2.. x, y  
+_ K c3(C x,C y,C z){K r=kC(3); R*r=x, r[1]=y, r[2]=z, r;} // 3.. x, y, z
+_ K jc(K x,C c){R j2(x, kc(c));} // append c to x
 
-#define A(x)        ({J _j=(J)(x);!_j||_j>>52?KF:15&_j>>48;})
+#define A(x)        ({J _j=(J)(x); !_j||_j>>52 ? KF : 15&_j>>48;})
 #define I(x)        (I)(J)(x) //(-1UL>>16&(J)(x))
 #define Q(x)        P(QQ==A(x),x) //#define Q(c,i)      P(c,qi(i))  //error index(nyi,rank,length,type,..)
 #define Qs(c,s)     P(c,qs(s))  //error string

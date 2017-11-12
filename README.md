@@ -75,19 +75,27 @@ V w2(S s){write(2,s,strlen(s));}ZS r2(S s){ZC b[256];R w2(s),b[read(0,b,256)-1]=
 Arthur is famous for his very dense programming style. Most C programmers would
 scream when seeing this code.
 
-In his view, it is much better to have everything readable on the screen at once than to have great
-names for things or a lot of white space to comfort the first timer reader. 
+In his view (and others in the terse scene), it is much better to have
+everything in your application readable on the screen at once than to have
+great names for things or a lot of white space to comfort the first timer
+reader. 
+
+To them, once you've sufficiently studied that screen or two of code, you can
+understand all of it at the same time. If it's spread out over thousands of
+files, it's very difficult to understand all of it, which leads to bugs,
+unnecessary abstraction, and the need for advanced tooling just to work with
+your own project's code.
 
 He wants to see the code "all at once" so he can understand all of its behavior without paging around
 and shifting his focus to another tab, window, etc. To get there he makes a lot of tradeoffs in terms 
 of the code formatting and naming conventions. He also, in `b`, creates a dense set of interlocking
 macros and abstractions that can make the code very hard to follow.
 
-Critics say that his code is like old school modem line noise: random
-punctuation intermixed with bits of understandable code. I would suggest that
-he's actually quite careful with the abstractions he chooses and they are
-actually not always the most dense, highly compressed code structures available
-to him. He chooses wisely.
+Critics and the uninitiated say that his code is like old school modem line
+noise: random punctuation intermixed with bits of understandable code. I would
+suggest that he's actually quite careful with the abstractions he chooses and
+they are actually not always the most dense, highly compressed code structures
+available to him. He chooses wisely and his code rewards deep study.
 
 Arthur, by the way, says his code is like woodgrain, a more romantic view. 
 
@@ -95,9 +103,10 @@ About this repo
 ------
 
 Here I have reworked parts of the code so they are easier to understand by a
-programmer of the traditional school of code formatting.
+programmer of the traditional school of code formatting, including comments
+explaining my presumption of the intent of a bit of code.
 
-I don't pretend to truly understand `b`. 
+For what it's worth, I don't pretend to truly understand `b`. 
 
 I've also gone through and added some comments here and there to help the reader
 understand how it works.
@@ -112,7 +121,7 @@ This is more for study and curiosity, and perhaps a window into how Arthur's
 mind works, than to compile and use. Check out the Kparc master repo which
 might be closer to being usable.
 
-I do not track changes from the master repo in this repo.
+I do not track changes from the `b` master repo in this repo.
 
 Legal
 -----
@@ -124,15 +133,26 @@ you want to use it in any way, contact Arthur Whitney directly.
 Notes
 -----
 
+To understand the code, you must understand the macros in `a.h` first. These are critical in higher
+level portions of the code, especially that in `b.c`.
+
 Misc notes, no particular order:
 
 * General conventions:
+	* Types are abbreviated to single letters:
+	  * `f` float
+		* `i` int
+		* `j` long
+		* `c` byte
+		* `s` string 
+		* `k` internal b value (name probably comes from Q's k.h)
   * `x` generally is a locally-defined variable that contains the argument we are operating on
   * Likewise, these same functions are defined for `y`, `r`, and `z`.
 * Values:
 	* An elements length is stored as an int in the item *before* the pointer, so:
 	* `xn` calls `xI[-1]` where:
-		* `xI` basically does (int*)x 
+		* `xI` basically does `(int*)x`
+		* `xJ`, `xF`, 
 	* There are other, related functions (implemented as macros in `a.h`):
 		* `xm` accesses x[-8], which is the memory allocated to the value
 		* `xr` accesses x[-7], which is the ref count
