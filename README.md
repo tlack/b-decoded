@@ -3,7 +3,7 @@ b Demistified, Volume 1, Abridged
 
 This is my attempt at understanding how the `b` programming language interpreter works.
 
-`b` is a programming language by Arthur Whitney, the creator of K, Q, and Kdb.
+`b` is a systems-level programming language by Arthur Whitney, the creator of K, Q, and Kdb.
 
 He has informally released it and sporadically updates the code at http://kparc.com/b/
 
@@ -62,20 +62,31 @@ jmp tst cmp o2
 ret cll psh pop
 ```
 
-This repo
+Arthur Style
 ---------
 
-Here's an example of two lines of the `b` source code (from a.c, written in C):
+Here's an example of two lines of the `b` source code (from a.c, written in pretty much plain old C):
 
 ```
 J read(),write();I open(),close(),fstat(),munmap();S mmap();V exit();ZF ms(){J a,d;asm volatile("rdtsc":"=a"(a),"=d"(d));R((d<<32)+a)*.58e-6;}
 V w2(S s){write(2,s,strlen(s));}ZS r2(S s){ZC b[256];R w2(s),b[read(0,b,256)-1]=0,b;}ZI rand(){ZJ j0=-314159;R j0=4294957665L*j0+(j0>>32);}
 ```
 
-Arthur is famous for his very dense programming style. In his view, it is much
-better to have everything readable on the screen at once, than to have great
-names for things, or a lot of white space. He wants to see the code "all at
-once" so he makes a lot of tradeoffs in terms of the code formatting. 
+Arthur is famous for his very dense programming style. Most C programmers would
+scream when seeing this code.
+
+In his view, it is much better to have everything readable on the screen at once than to have great
+names for things or a lot of white space to comfort the first timer reader. 
+
+He wants to see the code "all at once" so he can understand all of its behavior without paging around
+and shifting his focus to another tab, window, etc. To get there he makes a lot of tradeoffs in terms 
+of the code formatting and naming conventions. He also, in `b`, creates a dense set of interlocking
+macros and abstractions that can make the code very hard to follow.
+
+Critics say that his code is like old school modem line noise: random punctuation intermixed with bits
+of understandable code. I would suggest that he's actually quite careful with the 
+
+Arthur says his code is like woodgrain, a more romantic view. 
 
 Here I have reworked parts of the code so they are easier to understand by a
 programmer of the traditional school of code formatting.
